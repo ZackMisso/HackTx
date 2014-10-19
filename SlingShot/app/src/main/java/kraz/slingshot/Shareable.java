@@ -72,9 +72,11 @@ public class Shareable extends ImageView{
 
     // sets the location to the parameter coordinates
     private void makeBounds(double x,double y){
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(180,180);
         params.alignWithParent=true;
-        params.setMargins((int)x,(int)y,60,60);
+        //params.setMargins((int)x,(int)y,0,0);
+        params.leftMargin=(int)x;
+        params.topMargin=(int)y;
         setLayoutParams(params);
     }
 

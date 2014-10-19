@@ -7,6 +7,8 @@ package kraz.slingshot;
 import android.view.View.OnTouchListener;
 import android.view.View;
 import android.view.MotionEvent;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 //import android.widget.RelativeLayout.LayoutParams;
 import java.util.Timer;
@@ -35,10 +37,17 @@ public class ShareableOnTouchListener implements OnTouchListener{
             //System.out.println(shareable.getDy());
             //System.out.println("Temp Bounds Set");
             shareable.setTempBounds();
+            //shareable.startAnimation(animation);
         }
         if(action==MotionEvent.ACTION_UP&&!shareable.getMoving()){
             //System.out.println(shareable.getDy());
             if(shareable.getDy()>70){
+                //System.out.println(shareable.getTempX());
+                TranslateAnimation animation=new TranslateAnimation((float)shareable.getTempX()-520,(float)shareable.getTempX()-520,(float)shareable.getTempY()-780,-60-1500);
+                animation.setDuration(2000);
+                animation.setRepeatCount(0);
+                shareable.startAnimation(animation);
+
                 //int sec=0;
                 //System.out.println("RISING!");
                 //while(shareable.getTempY()>-60) {
@@ -54,15 +63,15 @@ public class ShareableOnTouchListener implements OnTouchListener{
                 //        //sec=0;
                 //    //}
                 //}
-                shareable.setStartBounds();
+                //shareable.setStartBounds();
 
                 //shareable.setMoving(true);
                 //MainActivity ma=shareable.getReference();
                 //Timer timer=new Timer();
                 //timer.schedule(new LeaveScreenTimerTask(timer,shareable),0x0,1000);
                 //ma.getTimeEvents().add(timer); // I dont think this is needed
-            }else
-                shareable.setStartBounds();
+            }//else
+            shareable.setStartBounds();
             // add more here later
         }
 
