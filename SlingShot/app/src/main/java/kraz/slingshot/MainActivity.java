@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
     static HandleSeacrh handleSeacrh;
     BluetoothDevice bdDevice;
     BluetoothClass bdClass;
-    ArrayList<BluetoothDevice> arrayListPairedBluetoothDevices;
+    public static ArrayList<BluetoothDevice> arrayListPairedBluetoothDevices;
     private ButtonClicked clicked;
     ListItemClickedonPaired listItemClickedonPaired;
     BluetoothAdapter bluetoothAdapter = null;
@@ -113,7 +113,7 @@ public class MainActivity extends Activity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.i("Log", "The bond is created: "+isBonded);
+
         }
     }
     class ListItemClickedonPaired implements OnItemClickListener
@@ -195,13 +195,14 @@ public class MainActivity extends Activity {
             }
         }
     }
+
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Message msg = Message.obtain();
             String action = intent.getAction();
             if(BluetoothDevice.ACTION_FOUND.equals(action)){
-                Toast.makeText(context, "ACTION_FOUND", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Devices found", Toast.LENGTH_SHORT).show();
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 try
@@ -210,7 +211,6 @@ public class MainActivity extends Activity {
                     //device.getClass().getMethod("cancelPairingUserInput", boolean.class).invoke(device);
                 }
                 catch (Exception e) {
-                    Log.i("Log", "Inside the exception: ");
                     e.printStackTrace();
                 }
 
@@ -228,6 +228,7 @@ public class MainActivity extends Activity {
                         if(device.getAddress().equals(arrayListBluetoothDevices.get(i).getAddress()))
                         {
                             flag = false;
+                            Toast.makeText(context,"This device is already paired", Toast.LENGTH_LONG).show();
                         }
                     }
                     if(flag == true)
@@ -235,13 +236,13 @@ public class MainActivity extends Activity {
                         detectedAdapter.add(device.getName()+"\n"+device.getAddress());
                         arrayListBluetoothDevices.add(device);
                         detectedAdapter.notifyDataSetChanged();
+                        Toast.makeText(context,"This device has been paired", Toast.LENGTH_LONG).show();
                     }
                 }
             }
         }
     };
     private void startSearching() {
-        Log.i("Log", "in the start searching method");
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         MainActivity.this.registerReceiver(myReceiver, intentFilter);
         bluetoothAdapter.startDiscovery();
@@ -250,20 +251,20 @@ public class MainActivity extends Activity {
         if(!bluetoothAdapter.isEnabled())
         {
             bluetoothAdapter.enable();
-            Log.i("Log", "Bluetooth is Enabled");
+            Toast.makeText(this,"Bluetooth has been enabled", Toast.LENGTH_LONG).show();
         }
     }
     private void offBluetooth() {
         if(bluetoothAdapter.isEnabled())
         {
             bluetoothAdapter.disable();
+            Toast.makeText(this,"Bluetooth has been disabled", Toast.LENGTH_LONG).show();
         }
     }
     private void makeDiscoverable() {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);
-        Log.i("Log", "Discoverable ");
     }
     class HandleSeacrh extends Handler
     {
@@ -278,4 +279,8 @@ public class MainActivity extends Activity {
                     break;
             }
         }
-    }}
+    }
+    public void changeActivity(View view){
+
+    }
+}
