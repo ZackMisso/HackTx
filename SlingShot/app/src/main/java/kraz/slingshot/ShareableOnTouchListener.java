@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 //import android.widget.RelativeLayout.LayoutParams;
 import java.util.Timer;
 
+// This class is deprecated
+
 public class ShareableOnTouchListener implements OnTouchListener{
     public boolean onTouch(View v,MotionEvent e){
         if(!(v instanceof Shareable))

@@ -90,3 +90,4 @@ public class GUIActivity extends ActionBarActivity {
     public void setTranslateAnimation(TranslateAnimation param){translateAnimation=param;}
     //public void setTimeEvents(ArrayList<Timer> param){timeEvents=param;}
 }
+

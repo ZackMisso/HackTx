@@ -5,6 +5,8 @@ package kraz.slingshot;
  */
 
 //import android.support.v7.app.ActionBarActivity;
+import android.view.MotionEvent;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.content.Context;
 import android.widget.RelativeLayout;
@@ -52,7 +54,7 @@ public class Shareable extends ImageView{
         // sets the location
         setStartBounds();
         // sets the click listener
-        setOnTouchListener(new ShareableOnTouchListener());
+        //setOnTouchListener(new ShareableOnTouchListener());
     }
 
     // returns the distance between this shareable and the coordinates
@@ -72,12 +74,37 @@ public class Shareable extends ImageView{
 
     // sets the location to the parameter coordinates
     private void makeBounds(double x,double y){
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(180,180);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(240,240);
         params.alignWithParent=true;
         //params.setMargins((int)x,(int)y,0,0);
         params.leftMargin=(int)x;
         params.topMargin=(int)y;
         setLayoutParams(params);
+    }
+
+    public boolean onTouchEvent(MotionEvent e){
+        int action=e.getAction();
+        if(action== MotionEvent.ACTION_DOWN&&!moving){
+            tempX=startX;
+            tempY=startY;
+        }
+        if(action==MotionEvent.ACTION_MOVE&&!moving){
+            double temp=tempY;
+            tempX=e.getRawX()-120;
+            tempY=e.getRawY()-580;
+            dy=temp-tempY;
+            setTempBounds();
+        }
+        if(action==MotionEvent.ACTION_UP&&!moving){
+            if(dy>70){
+                TranslateAnimation animation=new TranslateAnimation((float)tempX-520,(float)tempX-520,(float)tempY-780,-60-1500);
+                animation.setDuration(2000);
+                animation.setRepeatCount(0);
+                startAnimation(animation);
+            }
+            setStartBounds();
+        }
+        return true;
     }
 
     // getter methods
