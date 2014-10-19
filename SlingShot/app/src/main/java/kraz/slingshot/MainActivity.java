@@ -280,7 +280,9 @@ public class MainActivity extends Activity {
             }
         }
     }
-    public void changeActivity(View view){
 
+    public void changeActivity(View view){
+        Intent intent = new Intent(this, GUIActivity.class);
+        startActivity(intent);
     }
 }
