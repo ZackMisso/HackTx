@@ -15,12 +15,15 @@ import android.widget.RelativeLayout;
 public class Shareable extends ImageView{
     private MainActivity reference;
     private ShareFunction function;
+    private Shareable toSwitch;
     private long time;
     private double startX;
     private double startY;
     private double tempX;
     private double tempY;
     private double dy;
+    private int image;
+    private int selectedImage;
     private boolean moving;
     private boolean empty;
     private boolean recievesTouches;
@@ -31,10 +34,13 @@ public class Shareable extends ImageView{
         this(context,0,0,-1);
     }
 
-    public Shareable(Context context,int x,int y,int image){
+    public Shareable(Context context,int x,int y,int img){
         super(context);
         reference=null;
-        if(image!=-1);
+        toSwitch=null;
+        image=R.drawable.empty;
+        selectedImage=R.drawable.empty;
+        if(img!=-1);
             setImageResource(R.drawable.empty);
         function=null;
         time=Long.MAX_VALUE;
@@ -62,8 +68,18 @@ public class Shareable extends ImageView{
     }
 
     // returns the distance between this shareable and the coordinates
-    public double getDistance(int x,int y){
-        return Math.sqrt((double)((tempX-x)*(tempX-x)+(tempY-y)*(tempY-y)));
+    public double getDistance(double x,double y){
+        return Math.sqrt((tempX-x)*(tempX-x)+(tempY-y)*(tempY-y));
+    }
+
+    // sets the background image to the selected image
+    public void setCanSwitch(){
+        setImageResource(selectedImage);
+    }
+
+    // sets the background image to the non-selected image
+    public void setCanNotSwitch(){
+        setImageResource(image);
     }
 
     // sets the location to the start position
@@ -112,6 +128,7 @@ public class Shareable extends ImageView{
             double temp=tempY;
             tempX=e.getRawX()-120;
             tempY=e.getRawY()-580;
+            reference.checkForSwitch(this);
             //tempX=e.getX();
             //tempY=e.getY();
             dy=temp-tempY;
@@ -124,6 +141,17 @@ public class Shareable extends ImageView{
                 reference.setTime(System.currentTimeMillis());
                 animation.setRepeatCount(0);
                 startAnimation(animation);
+                if(toSwitch!=null){
+                    toSwitch.setCanNotSwitch();
+                    toSwitch=null;
+                }
+            }
+            else{
+                if(toSwitch!=null){
+                    toSwitch.setCanNotSwitch();
+                    switchPlaces(toSwitch);
+                    toSwitch=null;
+                }
             }
             setStartBounds();
         }
@@ -133,11 +161,14 @@ public class Shareable extends ImageView{
     // getter methods
     public MainActivity getReference(){return reference;}
     public ShareFunction getShareFunction(){return function;}
+    public Shareable getToSwitch(){return toSwitch;}
     public double getStartX(){return startX;}
     public double getStartY(){return startY;}
     public double getTempX(){return tempX;}
     public double getTempY(){return tempY;}
     public double getDy(){return dy;}
+    public int getImage(){return image;}
+    public int getSelectedImage(){return selectedImage;}
     public boolean getMoving(){return moving;}
     public boolean getEmpty(){return empty;}
     public boolean getRecievesTouches(){return recievesTouches;}
@@ -145,11 +176,14 @@ public class Shareable extends ImageView{
     // setter methods
     public void setReference(MainActivity param){reference=param;}
     public void setShareFunction(ShareFunction param){function=param;}
+    public void setToSwitch(Shareable param){toSwitch=param;}
     public void setStartX(double param){startX=param;}
     public void setStartY(double param){startY=param;}
     public void setTempX(double param){tempX=param;}
     public void setTempY(double param){tempY=param;}
     public void setDy(double param){dy=param;}
+    public void setImage(int param){image=param;}
+    public void setSelectedImage(int param){selectedImage=param;}
     public void setMoving(boolean param){moving=param;}
     public void setEmpty(boolean param){empty=param;}
     public void setRecievesTouches(boolean param){recievesTouches=param;}

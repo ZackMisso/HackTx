@@ -66,6 +66,19 @@ public class GUIActivity extends ActionBarActivity {
         //this.addContentView(layout,params);
     }
 
+    // checks if there is a possible switch and changes the background
+    public void checkForSwitch(Shareable selected){
+        selected.setToSwitch(null);
+        for(int i=0;i<shareables.size();i++){
+            shareables.get(i).setCanNotSwitch();
+            if(shareables.get(i)!=selected)
+                if(selected.getDistance(shareables.get(i).getStartX(),shareables.get(i).getStartY())<200){
+                    selected.setToSwitch(shareables.get(i));
+                    shareables.get(i).setCanSwitch();
+                }
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
