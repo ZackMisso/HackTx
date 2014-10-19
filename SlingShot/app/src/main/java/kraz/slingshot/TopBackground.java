@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 public class TopBackground extends ImageView{
     public TopBackground(Context context){
         super(context);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(1440,1000);
         // implement
         setLayoutParams(params);
         setDisconnected();
@@ -22,7 +22,7 @@ public class TopBackground extends ImageView{
 
     // sets the normal screen when there is no connection
     public void setDisconnected(){
-        setBackgroundColor(Color.rgb(0,0,0));
+        setBackgroundColor(Color.rgb(120,120,120));
     }
 
     // sets the background to green

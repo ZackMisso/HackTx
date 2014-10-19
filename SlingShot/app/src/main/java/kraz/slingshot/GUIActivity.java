@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class GUIActivity extends ActionBarActivity {
     private ArrayList<Shareable> shareables;
     private TranslateAnimation translateAnimation;
+    private long time;
     //private ArrayList<Timer> timeEvents;
     private TopBackground topBackground;
 
@@ -23,10 +24,15 @@ public class GUIActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        time=Long.MAX_VALUE;
+
         //timeEvents=new ArrayList<Timer>();
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         RelativeLayout layout = new RelativeLayout(this);
+
+        topBackground=new TopBackground(this);
+        layout.addView(topBackground);
 
         shareables=new ArrayList<Shareable>();
         for(int i=0;i<9;i++) {
@@ -36,7 +42,7 @@ public class GUIActivity extends ActionBarActivity {
             layout.addView(shareables.get(i));
         }
 
-        topBackground=new TopBackground(this);
+        //topBackground=new TopBackground(this);
         //layout.addView(topBackground);
 
         this.addContentView(layout,params);
@@ -58,6 +64,19 @@ public class GUIActivity extends ActionBarActivity {
         //b1.setLayoutParams(params);
         //layout.addView(b1);
         //this.addContentView(layout,params);
+    }
+
+    // checks if there is a possible switch and changes the background
+    public void checkForSwitch(Shareable selected){
+        selected.setToSwitch(null);
+        for(int i=0;i<shareables.size();i++){
+            shareables.get(i).setCanNotSwitch();
+            if(shareables.get(i)!=selected)
+                if(selected.getDistance(shareables.get(i).getStartX(),shareables.get(i).getStartY())<200){
+                    selected.setToSwitch(shareables.get(i));
+                    shareables.get(i).setCanSwitch();
+                }
+        }
     }
 
 
@@ -84,9 +103,11 @@ public class GUIActivity extends ActionBarActivity {
     public ArrayList<Shareable> getShareables(){return shareables;}
     public TranslateAnimation getTranslateAnimation(){return translateAnimation;}
     //public ArrayList<Timer> getTimeEvents(){return timeEvents;}
+    public long getTime(){return time;}
 
     // setter methods
     public void setShareables(ArrayList<Shareable> param){shareables=param;}
     public void setTranslateAnimation(TranslateAnimation param){translateAnimation=param;}
     //public void setTimeEvents(ArrayList<Timer> param){timeEvents=param;}
+    public void setTime(long param){time=param;}
 }
