@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 public class Shareable extends ImageView{
     private MainActivity reference;
     private ShareFunction function;
+    private long time;
     private double startX;
     private double startY;
     private double tempX;
@@ -22,6 +23,7 @@ public class Shareable extends ImageView{
     private double dy;
     private boolean moving;
     private boolean empty;
+    private boolean recievesTouches;
 
     //private int run=0;
 
@@ -35,6 +37,7 @@ public class Shareable extends ImageView{
         if(image!=-1);
             setImageResource(R.drawable.empty);
         function=null;
+        time=Long.MAX_VALUE;
         startX=x;
         startY=y;
         tempX=0;
@@ -42,6 +45,7 @@ public class Shareable extends ImageView{
         dy=0;
         moving=false;
         empty=image==R.drawable.empty||image==-1;
+        recievesTouches=true;
 
         //System.out.println("THIS WAS RAN!!!");
         // implement the rest
@@ -76,13 +80,29 @@ public class Shareable extends ImageView{
     private void makeBounds(double x,double y){
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(240,240);
         params.alignWithParent=true;
+        //params.
         //params.setMargins((int)x,(int)y,0,0);
         params.leftMargin=(int)x;
         params.topMargin=(int)y;
         setLayoutParams(params);
     }
 
+    // switches places on the board with another shareable
+    public void switchPlaces(Shareable other){
+        double x=startX;
+        double y=startY;
+        startX=other.getStartX();
+        startY=other.getStartY();
+        other.setStartX(x);
+        other.setStartY(y);
+        setStartBounds();
+        other.setStartBounds();
+    }
+
     public boolean onTouchEvent(MotionEvent e){
+        if((!recievesTouches||reference.getTime()-System.currentTimeMillis()>-2000)&&reference.getTime()!=Long.MAX_VALUE)
+            return false;
+        reference.setTime(Long.MAX_VALUE);
         int action=e.getAction();
         if(action== MotionEvent.ACTION_DOWN&&!moving){
             tempX=startX;
@@ -92,13 +112,16 @@ public class Shareable extends ImageView{
             double temp=tempY;
             tempX=e.getRawX()-120;
             tempY=e.getRawY()-580;
+            //tempX=e.getX();
+            //tempY=e.getY();
             dy=temp-tempY;
             setTempBounds();
         }
         if(action==MotionEvent.ACTION_UP&&!moving){
-            if(dy>70){
-                TranslateAnimation animation=new TranslateAnimation((float)tempX-520,(float)tempX-520,(float)tempY-780,-60-1500);
+            if(dy>40){
+                TranslateAnimation animation=new TranslateAnimation((float)0,(float)0,(float)tempY-900,-2580);
                 animation.setDuration(2000);
+                reference.setTime(System.currentTimeMillis());
                 animation.setRepeatCount(0);
                 startAnimation(animation);
             }
@@ -116,6 +139,8 @@ public class Shareable extends ImageView{
     public double getTempY(){return tempY;}
     public double getDy(){return dy;}
     public boolean getMoving(){return moving;}
+    public boolean getEmpty(){return empty;}
+    public boolean getRecievesTouches(){return recievesTouches;}
 
     // setter methods
     public void setReference(MainActivity param){reference=param;}
@@ -126,4 +151,6 @@ public class Shareable extends ImageView{
     public void setTempY(double param){tempY=param;}
     public void setDy(double param){dy=param;}
     public void setMoving(boolean param){moving=param;}
+    public void setEmpty(boolean param){empty=param;}
+    public void setRecievesTouches(boolean param){recievesTouches=param;}
 }
